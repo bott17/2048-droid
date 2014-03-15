@@ -54,8 +54,12 @@ public class Tablero {
 			mapa.put(i, new Celda());
 		
 		//Casillas que se iniciaran con numero
-		int casilla1 = (int)(Math.random()*TamanoTablero-1), 
-				casilla2 = (int)(Math.random()*TamanoTablero-1);
+		int casilla1 = (int)(Math.random()*TamanoTablero-1); 
+		int casilla2;
+		//Asegurarse de que no se repite la misma casilla
+		do{
+			casilla2 = (int)(Math.random()*TamanoTablero-1);
+		}while(casilla2 == casilla1);
 		
 		//25% de posibilidades de generar un 4 en vez de un 2
 		if((int)(Math.random()*100)<25){

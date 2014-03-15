@@ -16,6 +16,55 @@ public class Celda {
 	
 	Celda(int numero){
 		this.numero = numero;
+		
+		switch (numero) {
+		case 2:
+			
+			break;
+		
+		case 4:
+			
+			break;
+		
+		case 8:
+			
+			break;
+			
+		case 16:
+			
+			break;
+			
+		case 32:
+			
+			break;
+			
+		case 64:
+			
+			break;
+		
+		case 128:
+			
+			break;
+			
+		case 256:
+			
+			break;
+			
+		case 512:
+			
+			break;
+			
+		case 1024:
+			
+			break;
+			
+		case 2048:
+			
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	@Override
