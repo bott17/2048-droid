@@ -1,6 +1,7 @@
 package bott.app.game_2048_droid;
 
 import bott.app.gameElements.Celda;
+import bott.app.gameElements.Game;
 import bott.app.gameElements.Tablero;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -8,6 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.GridLayout;
 
 public class MainActivity extends Activity {
@@ -23,6 +27,18 @@ public class MainActivity extends Activity {
 		
 		initTablero();
 		
+		Button b = (Button)findViewById(R.id.button1);
+		b.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				Game g = new Game();
+				g.moverCeldas("");
+				
+			}
+		});
+		
 	}
 
 	/**
@@ -30,14 +46,14 @@ public class MainActivity extends Activity {
 	 */
 	private void initTablero(){
 		tableroLayout = (GridLayout)findViewById(R.id.tableroLayout);
-		if(tableroLayout != null)
-			Log.i("as",tableroLayout.getChildCount() + "");
+		//if(tableroLayout != null)
+			//Log.i("as",tableroLayout.getChildCount() + "");
 		
 		Tablero.crateInstance();
 		tablero = Tablero.getInstance();
 		
 		if(tableroLayout != null){
-			for(int i = 0 ; i< Tablero.TamanoTablero; i++){
+			for(int i = 0 ; i< Tablero.TamanioTablero; i++){
 				Celda c= tablero.getCasilla(i);
 				tableroLayout.getChildAt(i).setBackground(this.getResources().getDrawable(c.getFondo()));
 			}

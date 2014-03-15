@@ -1,9 +1,6 @@
 package bott.app.gameElements;
 
 import bott.app.game_2048_droid.R;
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 
 /**
  * Representa una casilla del tablero de juego.
@@ -16,6 +13,8 @@ public class Celda {
 	private int numero=0;
 	private int color=0;
 	private int fondo=R.drawable.gris2;
+	
+	private int ultimoTurnoSuma = 0;
 	
 	Celda (){
 	}
@@ -79,6 +78,30 @@ public class Celda {
 	 */
 	public int getFondo(){
 		return fondo;
+	}
+	
+	/**
+	 * Devuelve el valor de la casilla
+	 * @return Valor de la casilla
+	 */
+	public int getValor(){
+		return numero;
+	}
+	
+	/**
+	 * Devuelve el ultimo turno donde se sumo la celda
+	 * @return
+	 */
+	public int getTurnoSuma(){
+		return ultimoTurnoSuma;
+	}
+	
+	/**
+	 * Establece el ultimo turno donde se sumo la celda
+	 * @param numero
+	 */
+	public void setTurnoSuma(int numero){
+		ultimoTurnoSuma = numero;
 	}
 
 	@Override

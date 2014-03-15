@@ -1,5 +1,6 @@
 package bott.app.gameElements;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -13,16 +14,21 @@ import android.util.Log;
 
 public class Tablero {
 	
-	public static final int TamanoTablero = 16; //Tamaño el tablero, 4x4=16
+	public static final int TamanioTablero = 16; //Tamaño el tablero, 4x4=16
 	public static final String TAG = "ClaseTablero";
 	
 	private static Tablero instance = null;
-	private TreeMap<Integer, Celda> mapa;
+	private TreeMap<Integer, Celda> mapaCasillas;
+	private ArrayList<Integer> indiceCasillasLibres;
+	
 	
 	private Tablero(){
 		
-		initTablero();
-		//mostrarTablero();
+		initComponents();
+//		for(int i=0; i<14; i++)
+//			generarCasilla(true);
+//		mostrarTablero();
+		
 	}
 	
 	
@@ -43,49 +49,109 @@ public class Tablero {
 	}
 	
 	/**
+	 * Inicia todos los componentes del tablero
+	 */
+	private void initComponents(){
+		//Inicia el indice de casillas libres y mete todas las casillas
+		indiceCasillasLibres = new ArrayList<Integer>();
+		for(int i=0; i<TamanioTablero; i++)
+			indiceCasillasLibres.add(i);
+		
+		initCasillas();
+	}
+	
+	/**
+	 * Rellena una casilla con una celda concreta
+	 * @param celda
+	 * @param posicion
+	 * @return Indica si se pudo meter la celda en la posicion indicada
+	 */
+	private boolean rellenaCasilla(Celda celda, int posicion){
+		
+		if(positionIsEmpty(posicion)){
+			mapaCasillas.put(posicion, celda);
+			if(indiceCasillasLibres.contains(posicion)){
+				indiceCasillasLibres.remove(indiceCasillasLibres.indexOf(posicion));
+			}
+			return true;
+		}
+		else
+			return false;
+		
+	}
+	
+	/**
+	 * Indica si la casilla esta libre
+	 * @param posicion Posicion de la casilla
+	 * @return True si esta libre o false en caso contrario
+	 */
+	private boolean positionIsEmpty(int posicion){
+		if (mapaCasillas.get(posicion).getValor() == 0)
+			return true;
+		else
+			return false;
+	}
+	
+	/**
 	 * Inicializa los elementos del tablero.
 	 * @brief Crea un tablero de tamaño adecuado con las casillas vacias.
 	 */
-	private void initTablero(){
-		mapa = new TreeMap<Integer, Celda>();
+	private void initCasillas(){		
+		
+		mapaCasillas = new TreeMap<Integer, Celda>();
 		
 		//Mete en cada posicion una nueva celda
-		for(int i=0; i<TamanoTablero; i++)
-			mapa.put(i, new Celda());
+		for(int i=0; i<TamanioTablero; i++)
+			mapaCasillas.put(i, new Celda());
 		
-		//Casillas que se iniciaran con numero
-		int casilla1 = (int)(Math.random()*TamanoTablero-1); 
-		int casilla2;
-		//Asegurarse de que no se repite la misma casilla
-		do{
-			casilla2 = (int)(Math.random()*TamanoTablero-1);
-		}while(casilla2 == casilla1);
+		generarCasilla(false);
 		
-		//25% de posibilidades de generar un 4 en vez de un 2
-		if((int)(Math.random()*100)<25){
-			mapa.put(casilla1, new Celda(4));
-		}
-		else
-			mapa.put(casilla1, new Celda(2));
-		
-		mapa.put(casilla2, new Celda(2)); //Introduce el segundo numero
-		
+		generarCasilla(true);		
 	}
 	
 	/**
 	 * Visualiza el contenido del tablero
 	 */
 	public void mostrarTablero(){
-		for(Map.Entry<Integer, Celda> celda : mapa.entrySet()){
+		for(Map.Entry<Integer, Celda> celda : mapaCasillas.entrySet()){
 			Log.i(TAG, celda.toString()+"\n");
 		}
 	}
 	
-	public Celda getCasilla(int fila, int columna){
-		return mapa.get(convertFilColToKey(fila, columna));
+	/**
+	 * Genera de forma aleatoria una casilla con un 2 o un 4
+	 * @brief la probabilidad de un 4 es del 25%
+	 * @param aleatorio Indica si la casilla puede contener un 4 o un 2 (true) o solo un 2 (false)
+	 */
+	public void generarCasilla(boolean aleatorio){
+		
+		int casilla; 
+		
+		do{
+			casilla = posicionLibreAleatoria();
+		}while(!positionIsEmpty(casilla));
+		
+		if(aleatorio){
+			if((int)(Math.random()*100)<25){
+				rellenaCasilla(new Celda(4), casilla);
+			}
+			else
+				rellenaCasilla(new Celda(2), casilla);
+		}
+		else
+			rellenaCasilla(new Celda(2), casilla);
 	}
+	
+	public Celda getCasilla(int fila, int columna){
+		return mapaCasillas.get(convertFilColToKey(fila, columna));
+	}
+	/**
+	 * Devuelve la casilla que esta en la posicion indicada
+	 * @param nCasilla Posicion de la casilla
+	 * @return Casilla correspondiente a esa posicion
+	 */
 	public Celda getCasilla(int nCasilla){
-		return mapa.get(nCasilla);
+		return mapaCasillas.get(nCasilla);
 	}
 	
 	
@@ -97,6 +163,21 @@ public class Tablero {
 	 */
 	private int convertFilColToKey(int fil, int col){
 		return 4*fil + col;
+	}
+	
+	/**
+	 * Genera aleatoriamente una posicion, correspondiente a una casilla libre
+	 * @return Posicion aleatoria de la casilla libre
+	 */
+	private int posicionLibreAleatoria(){
+		int casilla = (int)(Math.random()*100)%indiceCasillasLibres.size();
+		
+		return indiceCasillasLibres.get(casilla);
+	}
+	
+	public boolean moverIzquierda(){
+		
+		return false;
 	}
 
 }
