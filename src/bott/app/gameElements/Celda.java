@@ -1,5 +1,10 @@
 package bott.app.gameElements;
 
+import bott.app.game_2048_droid.R;
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+
 /**
  * Representa una casilla del tablero de juego.
  * Puede contener numeros potencias de 2, desde el 2 hasta el 2048
@@ -10,6 +15,7 @@ public class Celda {
 
 	private int numero=0;
 	private int color=0;
+	private int fondo=R.drawable.gris2;
 	
 	Celda (){
 	}
@@ -19,11 +25,11 @@ public class Celda {
 		
 		switch (numero) {
 		case 2:
-			
+			fondo = R.drawable.ic_launcher;
 			break;
 		
 		case 4:
-			
+			fondo = R.drawable.ic_launcher;
 			break;
 		
 		case 8:
@@ -65,6 +71,14 @@ public class Celda {
 		default:
 			break;
 		}
+	}
+	
+	/**
+	 * Devuelve el id del fondo de la casilla seleccionada
+	 * @return id del drawable del fondo
+	 */
+	public int getFondo(){
+		return fondo;
 	}
 
 	@Override

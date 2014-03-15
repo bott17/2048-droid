@@ -22,7 +22,7 @@ public class Tablero {
 	private Tablero(){
 		
 		initTablero();
-		mostrarTablero();
+		//mostrarTablero();
 	}
 	
 	
@@ -79,6 +79,24 @@ public class Tablero {
 		for(Map.Entry<Integer, Celda> celda : mapa.entrySet()){
 			Log.i(TAG, celda.toString()+"\n");
 		}
+	}
+	
+	public Celda getCasilla(int fila, int columna){
+		return mapa.get(convertFilColToKey(fila, columna));
+	}
+	public Celda getCasilla(int nCasilla){
+		return mapa.get(nCasilla);
+	}
+	
+	
+	/**
+	 * Convierte un formato de filas y columnas basado en celda 11 a una key de identificacion dentro del mapa
+	 * @param fil Fila donde se encuentra la celda, 0-13
+	 * @param col Columna donde se encuentra la celda, 0-13
+	 * @return
+	 */
+	private int convertFilColToKey(int fil, int col){
+		return 4*fil + col;
 	}
 
 }

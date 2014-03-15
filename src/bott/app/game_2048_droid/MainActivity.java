@@ -1,43 +1,49 @@
 package bott.app.game_2048_droid;
 
+import bott.app.gameElements.Celda;
 import bott.app.gameElements.Tablero;
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.GridLayout;
 
 public class MainActivity extends Activity {
 	
-	Tablero tablero;
+	private Tablero tablero;
+	private static GridLayout tableroLayout; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
 		
-		initComponents();
+		initTablero();
 		
 	}
-	
+
 	/**
-	 * Inicia los diferentes componentes del juego
+	 * Inicia el tablero de juego	
 	 */
-	private void initComponents(){
+	private void initTablero(){
+		tableroLayout = (GridLayout)findViewById(R.id.tableroLayout);
+		if(tableroLayout != null)
+			Log.i("as",tableroLayout.getChildCount() + "");
+		
 		Tablero.crateInstance();
 		tablero = Tablero.getInstance();
+		
+		if(tableroLayout != null){
+			for(int i = 0 ; i< Tablero.TamanoTablero; i++){
+				Celda c= tablero.getCasilla(i);
+				tableroLayout.getChildAt(i).setBackground(this.getResources().getDrawable(c.getFondo()));
+			}
+		}
 	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,22 +64,4 @@ public class MainActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
-					false);
-			return rootView;
-		}
-	}
-
 }

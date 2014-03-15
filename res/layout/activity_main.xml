@@ -1,7 +1,124 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="bott.app.game_2048_droid.MainActivity"
-    tools:ignore="MergeRootFrame" />
+    android:orientation="vertical" >
+    
+    <GridLayout
+        android:id="@+id/tableroLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="114dp"
+        android:columnCount="4"
+        android:rowCount="4" >
+
+        <FrameLayout
+            android:id="@+id/frame11"
+            android:layout_gravity="fill_horizontal"
+            android:background="@drawable/ic_launcher" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame12"
+            android:layout_gravity="fill_horizontal" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame13"
+            android:layout_gravity="fill_horizontal" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame14"
+            android:layout_gravity="fill_horizontal" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame21"
+            android:layout_gravity="fill_horizontal" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame22"
+            android:layout_gravity="fill_horizontal" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame23"
+            android:layout_gravity="fill_horizontal" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame24"
+            android:layout_gravity="fill_horizontal"
+            android:background="@drawable/ic_launcher" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame31"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_horizontal" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame32"
+            android:layout_gravity="fill_horizontal" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame33"
+            android:layout_gravity="fill_horizontal" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame34"
+            android:layout_gravity="fill_horizontal" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame41"
+            android:layout_gravity="fill_horizontal" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame42"
+            android:layout_gravity="fill_horizontal" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame43"
+            android:layout_gravity="fill_horizontal"
+            android:background="@drawable/ic_launcher" >
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame44"
+            android:layout_gravity="fill_horizontal"
+            android:background="@drawable/ic_launcher" >
+
+        </FrameLayout>
+
+    </GridLayout>
+
+</RelativeLayout>
+    
