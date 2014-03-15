@@ -1,5 +1,6 @@
 package bott.app.game_2048_droid;
 
+import bott.app.gameElements.Tablero;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
@@ -12,6 +13,8 @@ import android.view.ViewGroup;
 import android.os.Build;
 
 public class MainActivity extends Activity {
+	
+	Tablero tablero;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,16 @@ public class MainActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		initComponents();
+		
+	}
+	
+	/**
+	 * Inicia los diferentes componentes del juego
+	 */
+	private void initComponents(){
+		tablero = Tablero.getInstance();
 	}
 
 	@Override
