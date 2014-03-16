@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -16,8 +17,14 @@ import android.widget.GridLayout;
 
 public class MainActivity extends Activity {
 	
+	public final String TAG = "MainAtivity";
+	
+	private Game game;
 	private Tablero tablero;
 	private static GridLayout tableroLayout; 
+	
+	float [] history = new float[2];
+    String [] direction = {"NONE","NONE"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +32,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		initTablero();
+		initApp();
 		
 		Button b = (Button)findViewById(R.id.button1);
 		b.setOnClickListener(new OnClickListener() {
@@ -33,31 +40,73 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				
-				Game g = new Game();
-				g.moverCeldas("");
+				boolean movRealizado= false;
+				do{
+					movRealizado = game.moverCeldas(Game.MOVER_ABAJO);
+					pintarTablero();
+					Log.i(TAG, "asda");
+				}while(movRealizado);
 				
 			}
 		});
 		
 	}
+	
+	/**
+	 * Inicializa todos los aspectos de la activity
+	 */
+	private void initApp(){
+		
+		initGame();
+		initTablero();
+		
+	}
+	
+	/**
+	 * Inicializa los aspectos internos del juego
+	 */
+	private void initGame(){
+		game = Game.getInstance();
+		game.initGame();
+	}
 
 	/**
-	 * Inicia el tablero de juego	
+	 * Inicia el apartado grafico del tablero
 	 */
 	private void initTablero(){
 		tableroLayout = (GridLayout)findViewById(R.id.tableroLayout);
 		//if(tableroLayout != null)
 			//Log.i("as",tableroLayout.getChildCount() + "");
 		
-		Tablero.crateInstance();
-		tablero = Tablero.getInstance();
+		tablero = game.getTablero();
 		
+		pintarTablero();
+	}
+	
+	/**
+	 * Pinta el estado actual del tablero
+	 */
+	private void pintarTablero(){
 		if(tableroLayout != null){
-			for(int i = 0 ; i< Tablero.TamanioTablero; i++){
+			for(int i = 0 ; i< Tablero.tamanioTablero; i++){
 				Celda c= tablero.getCasilla(i);
 				tableroLayout.getChildAt(i).setBackground(this.getResources().getDrawable(c.getFondo()));
 			}
 		}
+	}
+	
+	/**
+	 * Mueve todas las celdas en la direccion indicada, hasta que no pueda mover ninguna
+	 * @param direccion
+	 */
+	private void moverCeldas(int direccion){
+		
+		Log.i(TAG, direccion +"");
+		boolean movRealizado= false;
+		do{
+			movRealizado = game.moverCeldas(direccion);
+			pintarTablero();
+		}while(movRealizado);
 	}
 	
 
@@ -79,5 +128,30 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		
+		float xChange = history[0] - event.getX();
+        float yChange = history[1] - event.getY();
+        history[0] = event.getX();
+        history[1] = event.getY();
+
+        
+        if (xChange > 1.5 && (yChange > -2 && yChange < 2)){
+        	moverCeldas(Game.MOVER_IZQUIERDA);
+        }
+        if (xChange < -1.5 && (yChange > -2 && yChange < 2)){
+        	moverCeldas(Game.MOVER_DERECHA);
+        }
+        if (yChange > 1.5 && (xChange > -2 && xChange < 2)){
+        	moverCeldas(Game.MOVER_ARRIBA);
+        }
+        if (yChange < -1.5 && (xChange > -2 && xChange < 2)){
+        	moverCeldas(Game.MOVER_ABAJO);
+        }
+		
+		return super.onTouchEvent(event);
 	}
 }

@@ -73,6 +73,17 @@ public class Celda {
 	}
 	
 	/**
+	 * Indica si se trata de una celda vacia
+	 * @return true si es una casilla vacia, false en caso contrario
+	 */
+	public boolean isNull(){
+		if(numero == 0)
+			return true;
+		else
+			return false;
+	}
+	
+	/**
 	 * Devuelve el id del fondo de la casilla seleccionada
 	 * @return id del drawable del fondo
 	 */

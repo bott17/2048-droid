@@ -14,11 +14,11 @@ import android.util.Log;
 
 public class Tablero {
 	
-	public static final int TamanioTablero = 16; //Tamaño el tablero, 4x4=16
+	public static final int tamanioTablero = 16; //Tamaño el tablero, 4x4=16
 	public static final String TAG = "ClaseTablero";
 	
 	private static Tablero instance = null;
-	private TreeMap<Integer, Celda> mapaCasillas;
+	private  TreeMap<Integer, Celda> mapaCasillas;
 	private ArrayList<Integer> indiceCasillasLibres;
 	
 	
@@ -27,7 +27,7 @@ public class Tablero {
 		initComponents();
 //		for(int i=0; i<14; i++)
 //			generarCasilla(true);
-//		mostrarTablero();
+		mostrarTablero();
 		
 	}
 	
@@ -35,16 +35,17 @@ public class Tablero {
 	/**
 	 * Constructor publico del tablero. Solo permite crear uno para todo el juego.
 	 */
-	public static void crateInstance(){
+	public static void createInstance(){
 		if(instance==null)
 			instance = new Tablero();
 	}
 	
 	/**
-	 * Metodo para obtener el tablero de juego.
+	 * Metodo para obtener el tablero unico de juego.
 	 * @return
 	 */
 	public static Tablero getInstance(){
+		createInstance();
 		return instance;
 	}
 	
@@ -54,7 +55,7 @@ public class Tablero {
 	private void initComponents(){
 		//Inicia el indice de casillas libres y mete todas las casillas
 		indiceCasillasLibres = new ArrayList<Integer>();
-		for(int i=0; i<TamanioTablero; i++)
+		for(int i=0; i<tamanioTablero; i++)
 			indiceCasillasLibres.add(i);
 		
 		initCasillas();
@@ -86,7 +87,7 @@ public class Tablero {
 	 * @return True si esta libre o false en caso contrario
 	 */
 	private boolean positionIsEmpty(int posicion){
-		if (mapaCasillas.get(posicion).getValor() == 0)
+		if (getCasilla(posicion).getValor() == 0)
 			return true;
 		else
 			return false;
@@ -101,7 +102,7 @@ public class Tablero {
 		mapaCasillas = new TreeMap<Integer, Celda>();
 		
 		//Mete en cada posicion una nueva celda
-		for(int i=0; i<TamanioTablero; i++)
+		for(int i=0; i<tamanioTablero; i++)
 			mapaCasillas.put(i, new Celda());
 		
 		generarCasilla(false);
@@ -175,9 +176,127 @@ public class Tablero {
 		return indiceCasillasLibres.get(casilla);
 	}
 	
+	/**
+	 * Desplaza todas las casillas una posicion a la izquierda, si es posible
+	 * @return true si se pudo desplazar, false en caso contrario
+	 */
 	public boolean moverIzquierda(){
 		
-		return false;
+		boolean movimientoRealizado = false;
+		
+		//Recorre todas las casillas, de izquierda a derecha
+		for(int i=1; i < tamanioTablero; i++){
+			//Si no se trata de una casilla situada en la primera columna
+			if(i%4 != 0){
+				//No mueve casillas vacias
+				if(!getCasilla(i).isNull()){
+					//Si la celda de la izquierda esta vacia
+					if(positionIsEmpty(i-1)){
+						moverCelda(i, i-1, getCasilla(i));
+						movimientoRealizado = true;
+					}
+					//TODO Si esta ocupada hay que comprobar si se pueden sumar
+					else{}
+				}
+			}
+		}
+		
+		return movimientoRealizado;
 	}
-
+	
+	/**
+	 * Desplaza todas las casillas una posicion a la derecha, si es posible
+	 * @return true si se pudo desplazar, false en caso contrario
+	 */
+	public boolean moverDerecha(){
+		
+		boolean movimientoRealizado = false;
+		
+		//Recorre todas las casillas, de derecha a izquierda
+		for(int i=tamanioTablero-1; i >= 0; --i){
+			//Si no se trata de una casilla situada en la ultima columna
+			if(i%4 != 3){
+				//No mueve casillas vacias
+				if(!getCasilla(i).isNull()){
+					//Si la celda de la derecha esta vacia
+					if(positionIsEmpty(i+1)){
+						moverCelda(i, i+1, getCasilla(i));
+						movimientoRealizado = true;
+					}
+					//TODO Si esta ocupada hay que comprobar si se pueden sumar
+					else{}
+				}
+			}
+		}
+		
+		return movimientoRealizado;
+	}
+	
+	/**
+	 * Desplaza todas las casillas una posicion hacia arriba, si es posible
+	 * @return true si se pudo desplazar, false en caso contrario
+	 */
+	public boolean moverArriba(){
+		
+		boolean movimientoRealizado = false;
+		
+		//Recorre todas las casillas, de arriba a abajo
+		for(int i=4; i < tamanioTablero; i++){
+			//Si no se trata de una casilla situada en la primera fila
+			if(i>3){
+				//No mueve casillas vacias
+				if(!getCasilla(i).isNull()){
+					//Si la celda de encima esta vacia
+					if(positionIsEmpty(i-4)){
+						moverCelda(i, i-4, getCasilla(i));
+						movimientoRealizado = true;
+					}
+					//TODO Si esta ocupada hay que comprobar si se pueden sumar
+					else{}
+				}
+			}
+		}
+		
+		return movimientoRealizado;
+	}
+	
+	/**
+	 * Desplaza todas las casillas una posicion hacia abajo, si es posible
+	 * @return true si se pudo desplazar, false en caso contrario
+	 */
+	public boolean moverAbajo(){
+		
+		boolean movimientoRealizado = false;
+		
+		//Recorre todas las casillas, de abajo arriba
+		for(int i=tamanioTablero-4; i >= 0; --i){
+			//Si no se trata de una casilla situada en la ultima fila
+			if(i < 12){
+				//No mueve casillas vacias
+				if(!getCasilla(i).isNull()){
+					//Si la celda de encima esta vacia
+					if(positionIsEmpty(i+4)){
+						moverCelda(i, i+4, getCasilla(i));
+						movimientoRealizado = true;
+					}
+					//TODO Si esta ocupada hay que comprobar si se pueden sumar
+					else{}
+				}
+			}
+		}
+		
+		return movimientoRealizado;
+	}
+	
+	/**
+	 * Mueve una celda de posicion.
+	 * @exception Las posiciones deben ser correctas
+	 * @param posInicial Donde se encuentra la celda a mover
+	 * @param posFinal Donde se va a colocar
+	 * @param celda Celda que se desea mover
+	 */
+	private void moverCelda(int posInicial, int posFinal, Celda celda){
+		mapaCasillas.put(posFinal, celda);
+		mapaCasillas.put(posInicial, new Celda());
+	}
 }
