@@ -15,11 +15,13 @@ public class Game {
 	public static final int MOVER_ABAJO = 1;
 	public static final int MOVER_IZQUIERDA = 2;
 	public static final int MOVER_DERECHA = 3;
+	
+	public static final int valorParaGanar = 2048;
 
 	private static Game instance = null;
 	private static Tablero tablero;
 
-	private int turnoDeJuego = 0;
+	private static int turnoDeJuego = 1;
 
 	private static void createInstance() {
 		if (instance == null)
@@ -99,8 +101,47 @@ public class Game {
 		tablero = Tablero.getInstance();
 
 	}
-
+	
+	/**
+	 * Devuelve el tablero de juego
+	 * @return
+	 */
 	public Tablero getTablero() {
 		return tablero;
 	}
+	
+	/**
+	 * Devuelve el turno de juego
+	 * @return
+	 */
+	public static int getTurno(){
+		return turnoDeJuego;
+	}
+	
+	/**
+	 * Genera una nueva casilla en una posicion aleatoria
+	 */
+	public void generaNuevaCasilla(){
+		tablero.generarCasilla(true);
+	}
+	
+	/**
+	 * Indica si se ha ganado el juego
+	 * @return
+	 */
+	public boolean juegoGanado(){
+		return tablero.casillaGanadora;
+	}
+	
+	/**
+	 * Indica si se ha perdido el juego
+	 * @return
+	 */
+	public boolean juegoPerdido(){
+		if(tablero.casillasLibres() > 0)
+			return false;
+		else
+			return true;
+	}
+	
 }

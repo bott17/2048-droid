@@ -28,11 +28,11 @@ public class Celda {
 			break;
 		
 		case 4:
-			fondo = R.drawable.ic_launcher;
+			fondo = R.drawable.rotada;
 			break;
 		
 		case 8:
-			
+			fondo = R.drawable.rotada2;
 			break;
 			
 		case 16:

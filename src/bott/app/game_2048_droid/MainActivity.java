@@ -102,11 +102,27 @@ public class MainActivity extends Activity {
 	private void moverCeldas(int direccion){
 		
 		Log.i(TAG, direccion +"");
-		boolean movRealizado= false;
+		boolean movRealizado= false, newCasilla=false;
 		do{
 			movRealizado = game.moverCeldas(direccion);
 			pintarTablero();
+			if(movRealizado)
+				newCasilla = true;
 		}while(movRealizado);
+		
+		if(newCasilla){
+			game.generaNuevaCasilla();
+			pintarTablero();
+		}
+		
+		game.getTablero().mostrarTablero();
+		Log.i(TAG, movRealizado+"");
+		game.getTablero().mostrarCasillasLibres();
+		
+		//FIXME Controlar esto. De esta forma no es optimo, debo controlarlo antes de dejar mover de nuevo
+		if(game.juegoPerdido() || game.juegoGanado())
+			Log.i(TAG, "Juego ganado: " + game.juegoGanado() + " Juego perdido: " + game.juegoPerdido());
+		
 	}
 	
 

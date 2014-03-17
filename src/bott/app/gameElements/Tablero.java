@@ -1,6 +1,8 @@
 package bott.app.gameElements;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -16,6 +18,8 @@ public class Tablero {
 	
 	public static final int tamanioTablero = 16; //Tamaño el tablero, 4x4=16
 	public static final String TAG = "ClaseTablero";
+	
+	public static boolean casillaGanadora = false;
 	
 	private static Tablero instance = null;
 	private  TreeMap<Integer, Celda> mapaCasillas;
@@ -119,6 +123,11 @@ public class Tablero {
 		}
 	}
 	
+	public void mostrarCasillasLibres(){
+		Collections.sort(indiceCasillasLibres);
+		Log.i(TAG, indiceCasillasLibres.toString());
+	}
+	
 	/**
 	 * Genera de forma aleatoria una casilla con un 2 o un 4
 	 * @brief la probabilidad de un 4 es del 25%
@@ -127,7 +136,7 @@ public class Tablero {
 	public void generarCasilla(boolean aleatorio){
 		
 		int casilla; 
-		
+		Log.i(TAG, "asdas");
 		do{
 			casilla = posicionLibreAleatoria();
 		}while(!positionIsEmpty(casilla));
@@ -153,6 +162,11 @@ public class Tablero {
 	 */
 	public Celda getCasilla(int nCasilla){
 		return mapaCasillas.get(nCasilla);
+	}
+	
+	private void deleteCelda(int posicion){
+		mapaCasillas.put(posicion, new Celda());
+		indiceCasillasLibres.add(posicion);
 	}
 	
 	
@@ -196,7 +210,11 @@ public class Tablero {
 						movimientoRealizado = true;
 					}
 					//TODO Si esta ocupada hay que comprobar si se pueden sumar
-					else{}
+					else{
+						boolean sumado = sumaCelda(i,i-1);
+						if(sumado)
+							movimientoRealizado = true;
+					}
 				}
 			}
 		}
@@ -224,7 +242,11 @@ public class Tablero {
 						movimientoRealizado = true;
 					}
 					//TODO Si esta ocupada hay que comprobar si se pueden sumar
-					else{}
+					else{
+						boolean sumado = sumaCelda(i,i+1);
+						if(sumado)
+							movimientoRealizado = true;
+					}
 				}
 			}
 		}
@@ -252,7 +274,11 @@ public class Tablero {
 						movimientoRealizado = true;
 					}
 					//TODO Si esta ocupada hay que comprobar si se pueden sumar
-					else{}
+					else{
+						boolean sumado = sumaCelda(i,i-4);
+						if(sumado)
+							movimientoRealizado = true;
+					}
 				}
 			}
 		}
@@ -280,7 +306,11 @@ public class Tablero {
 						movimientoRealizado = true;
 					}
 					//TODO Si esta ocupada hay que comprobar si se pueden sumar
-					else{}
+					else{
+						boolean sumado = sumaCelda(i,i+4);
+						if(sumado)
+							movimientoRealizado = true;
+					}
 				}
 			}
 		}
@@ -296,7 +326,36 @@ public class Tablero {
 	 * @param celda Celda que se desea mover
 	 */
 	private void moverCelda(int posInicial, int posFinal, Celda celda){
-		mapaCasillas.put(posFinal, celda);
-		mapaCasillas.put(posInicial, new Celda());
+//		mapaCasillas.put(posFinal, celda);
+		rellenaCasilla(celda, posFinal);
+		
+		deleteCelda(posInicial);
+	}
+	
+	private boolean sumaCelda(int posinicial, int posFinal){
+		if(getCasilla(posinicial).getValor() == getCasilla(posFinal).getValor() 
+				&& (getCasilla(posFinal).getTurnoSuma() < Game.getTurno())){
+			
+			Celda cel = new Celda(getCasilla(posinicial).getValor()*2);
+			cel.setTurnoSuma(Game.getTurno());
+			mapaCasillas.put(posFinal, cel);
+			
+			deleteCelda(posinicial);
+			
+			if(cel.getValor() == Game.valorParaGanar)
+				casillaGanadora = true;
+			
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	/**
+	 * Indica el numero de casillas libres en el tablero
+	 * @return
+	 */
+	public int casillasLibres(){
+		return indiceCasillasLibres.size();
 	}
 }
