@@ -48,6 +48,10 @@ public class Game {
 		return getInstance();
 
 	}
+	
+	public void incrementarTurno(){
+		turnoDeJuego++;
+	}
 
 	/**
 	 * Movimiento direccional de las celdas del juego
@@ -86,9 +90,11 @@ public class Game {
 		} else
 			Log.i(TAG, "Tablero no inicializado");
 
+		/*
 		if (movimientoRealizado) {
 			turnoDeJuego++;
 		}
+		*/
 		
 		return movimientoRealizado;
 	}

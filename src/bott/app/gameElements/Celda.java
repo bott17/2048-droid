@@ -24,47 +24,47 @@ public class Celda {
 		
 		switch (numero) {
 		case 2:
-			fondo = R.drawable.ic_launcher;
+			fondo = R.drawable.dos;
 			break;
 		
 		case 4:
-			fondo = R.drawable.rotada;
+			fondo = R.drawable.cuatro;
 			break;
 		
 		case 8:
-			fondo = R.drawable.rotada2;
+			fondo = R.drawable.ocho;
 			break;
 			
 		case 16:
-			
+			fondo = R.drawable.dieciseis;
 			break;
 			
 		case 32:
-			
+			fondo = R.drawable.treintaydos;
 			break;
 			
 		case 64:
-			
+			fondo = R.drawable.sesentaycuatro;
 			break;
 		
 		case 128:
-			
+			fondo = R.drawable.cientoveintiocho;
 			break;
 			
 		case 256:
-			
+			fondo = R.drawable.doscientoscincuentayseis;
 			break;
 			
 		case 512:
-			
+			fondo = R.drawable.quinientosdoce;
 			break;
 			
 		case 1024:
-			
+			fondo = R.drawable.milveinticuatro;
 			break;
 			
 		case 2048:
-			
+			fondo = R.drawable.dosmilcuarentayocho;
 			break;
 
 		default:

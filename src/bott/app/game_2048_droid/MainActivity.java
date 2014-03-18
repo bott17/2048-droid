@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -15,57 +17,62 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.GridLayout;
 
-public class MainActivity extends Activity {
-	
+public class MainActivity extends Activity implements OnGestureListener {
+
 	public final String TAG = "MainAtivity";
-	
+
 	private Game game;
 	private Tablero tablero;
-	private static GridLayout tableroLayout; 
-	
-	float [] history = new float[2];
-    String [] direction = {"NONE","NONE"};
+	private static GridLayout tableroLayout;
+
+	private static boolean captandoMovimiento = true;
+
+	float[] history = new float[2];
+	String[] direction = { "NONE", "NONE" };
+
+	private GestureDetector gDetector;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		initApp();
-		
-		Button b = (Button)findViewById(R.id.button1);
+
+		Button b = (Button) findViewById(R.id.button1);
 		b.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				
-				boolean movRealizado= false;
-				do{
-					movRealizado = game.moverCeldas(Game.MOVER_ABAJO);
-					pintarTablero();
-					Log.i(TAG, "asda");
-				}while(movRealizado);
-				
+
+				boolean movRealizado = false;
+				// do{
+				movRealizado = game.moverCeldas(Game.MOVER_ABAJO);
+				game.generaNuevaCasilla();
+				pintarTablero();
+				// }while(movRealizado);
+
 			}
 		});
-		
+
 	}
-	
+
 	/**
 	 * Inicializa todos los aspectos de la activity
 	 */
-	private void initApp(){
-		
+	private void initApp() {
+
 		initGame();
 		initTablero();
-		
+		gDetector = new GestureDetector(getApplicationContext(),this);
+
 	}
-	
+
 	/**
 	 * Inicializa los aspectos internos del juego
 	 */
-	private void initGame(){
+	private void initGame() {
 		game = Game.getInstance();
 		game.initGame();
 	}
@@ -73,58 +80,64 @@ public class MainActivity extends Activity {
 	/**
 	 * Inicia el apartado grafico del tablero
 	 */
-	private void initTablero(){
-		tableroLayout = (GridLayout)findViewById(R.id.tableroLayout);
-		//if(tableroLayout != null)
-			//Log.i("as",tableroLayout.getChildCount() + "");
-		
+	private void initTablero() {
+		tableroLayout = (GridLayout) findViewById(R.id.tableroLayout);
+		// if(tableroLayout != null)
+		// Log.i("as",tableroLayout.getChildCount() + "");
+
 		tablero = game.getTablero();
-		
+
 		pintarTablero();
 	}
-	
+
 	/**
 	 * Pinta el estado actual del tablero
 	 */
-	private void pintarTablero(){
-		if(tableroLayout != null){
-			for(int i = 0 ; i< Tablero.tamanioTablero; i++){
-				Celda c= tablero.getCasilla(i);
-				tableroLayout.getChildAt(i).setBackground(this.getResources().getDrawable(c.getFondo()));
+	private void pintarTablero() {
+		if (tableroLayout != null) {
+			for (int i = 0; i < Tablero.tamanioTablero; i++) {
+				Celda c = tablero.getCasilla(i);
+				tableroLayout.getChildAt(i).setBackground(
+						this.getResources().getDrawable(c.getFondo()));
 			}
 		}
 	}
-	
+
 	/**
-	 * Mueve todas las celdas en la direccion indicada, hasta que no pueda mover ninguna
+	 * Mueve todas las celdas en la direccion indicada, hasta que no pueda mover
+	 * ninguna
+	 * 
 	 * @param direccion
 	 */
-	private void moverCeldas(int direccion){
-		
-		Log.i(TAG, direccion +"");
-		boolean movRealizado= false, newCasilla=false;
-		do{
+	private void moverCeldas(int direccion) {
+
+		// Log.i(TAG, direccion +"");
+		boolean movRealizado = false, newCasilla = false;
+		do {
 			movRealizado = game.moverCeldas(direccion);
 			pintarTablero();
-			if(movRealizado)
+			if (movRealizado)
 				newCasilla = true;
-		}while(movRealizado);
-		
-		if(newCasilla){
+		} while (movRealizado);
+
+		game.incrementarTurno();
+
+		if (newCasilla) {
 			game.generaNuevaCasilla();
 			pintarTablero();
 		}
-		
-		game.getTablero().mostrarTablero();
-		Log.i(TAG, movRealizado+"");
-		game.getTablero().mostrarCasillasLibres();
-		
-		//FIXME Controlar esto. De esta forma no es optimo, debo controlarlo antes de dejar mover de nuevo
-		if(game.juegoPerdido() || game.juegoGanado())
-			Log.i(TAG, "Juego ganado: " + game.juegoGanado() + " Juego perdido: " + game.juegoPerdido());
-		
+
+		// game.getTablero().mostrarTablero();
+		// Log.i(TAG, movRealizado+"");
+		// game.getTablero().mostrarCasillasLibres();
+
+		// FIXME Controlar esto. De esta forma no es optimo, debo controlarlo
+		// antes de dejar mover de nuevo
+		if (game.juegoPerdido() || game.juegoGanado())
+			Log.i(TAG, "Juego ganado: " + game.juegoGanado()
+					+ " Juego perdido: " + game.juegoPerdido());
+
 	}
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -148,26 +161,66 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		
-		float xChange = history[0] - event.getX();
-        float yChange = history[1] - event.getY();
-        history[0] = event.getX();
-        history[1] = event.getY();
+		//Es necesario para utilizar el modo de reconocimiento de gestos
+		return gDetector.onTouchEvent(event);
+	}
 
-        
-        if (xChange > 1.5 && (yChange > -2 && yChange < 2)){
-        	moverCeldas(Game.MOVER_IZQUIERDA);
-        }
-        if (xChange < -1.5 && (yChange > -2 && yChange < 2)){
-        	moverCeldas(Game.MOVER_DERECHA);
-        }
-        if (yChange > 1.5 && (xChange > -2 && xChange < 2)){
-        	moverCeldas(Game.MOVER_ARRIBA);
-        }
-        if (yChange < -1.5 && (xChange > -2 && xChange < 2)){
-        	moverCeldas(Game.MOVER_ABAJO);
-        }
+	@Override
+	public boolean onDown(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+			float distanceY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean onFling(MotionEvent start, MotionEvent finish, float velocityX,
+			float velocityY) {
 		
-		return super.onTouchEvent(event);
+		//FIXME No detecta bien el movimiento ABAJO
+		Log.i(TAG, Math.abs(start.getX() - finish.getX()) +" " + Math.abs(start.getY() - finish.getY()));
+		if (start.getRawY() < finish.getRawY() && Math.abs(start.getX() - finish.getX()) < 200
+				&& Math.abs(start.getY() - finish.getY()) > 150) {
+			Log.i(TAG, "abajo");
+			moverCeldas(Game.MOVER_ABAJO);
+		} 
+		else if(start.getRawY() > finish.getRawY() && Math.abs(start.getX() - finish.getX()) < 200
+				&& Math.abs(start.getY() - finish.getY()) > 150) {
+			Log.i(TAG, "arriba");
+			moverCeldas(Game.MOVER_ARRIBA);
+		}
+		else if(start.getRawX() < finish.getRawX() && Math.abs(start.getY() - finish.getY()) < 200){
+			Log.i(TAG, "derecha");
+			moverCeldas(Game.MOVER_DERECHA);
+		}
+		else if(start.getRawX() > finish.getRawX() && Math.abs(start.getY() - finish.getY()) < 200){
+			Log.i(TAG, "izquierda");
+			moverCeldas(Game.MOVER_IZQUIERDA);
+		}
+		
+		return true;
 	}
 }
