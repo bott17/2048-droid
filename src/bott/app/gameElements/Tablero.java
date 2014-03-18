@@ -387,4 +387,97 @@ public class Tablero {
 	public int casillasLibres() {
 		return indiceCasillasLibres.size();
 	}
+	
+	/**
+	 * Calcula si existe algun movimento en el tablero
+	 * @return
+	 */
+	public boolean conMovimientos(){
+		
+		for(int i=0; i<mapaCasillas.size(); i++){
+			//Comprueba movimiento a la izquierda
+			if(i%4 != 0){
+				if(tieneMovimiento(Game.MOVER_IZQUIERDA, i))
+					return true;
+			}
+			//Comprueba movimiento hacia arriba
+			if(i>3){
+				if(tieneMovimiento(Game.MOVER_ARRIBA, i))
+					return true;
+			}
+			//Comprueba movimiento hacia abajo
+			if(i<12){
+				if(tieneMovimiento(Game.MOVER_ABAJO, i))
+					return true;
+			}
+			//Comprueba movimiento a la derecha
+			if(i%4 != 3){
+				if(tieneMovimiento(Game.MOVER_DERECHA, i))
+					return true;
+			}
+			
+		}
+		return false;
+	}
+	
+	/**
+	 * Comprueba si una celda tiene un movimiento determinado
+	 * @param direccion Direccion de movimiento
+	 * @param posIni Posicion inicial de la celda
+	 * @return Ademas del resultado esperado devuelve false en caso de un movimiento ilegal
+	 */
+	private boolean tieneMovimiento(int direccion, int posIni){
+		int posFin=0;
+		switch (direccion) {
+		case Game.MOVER_ABAJO:
+			posFin = posIni+4;
+			break;
+		case Game.MOVER_ARRIBA:
+			posFin = posIni-4;
+			break;
+		case Game.MOVER_DERECHA:
+			posFin = posIni+1;
+			break;
+		case Game.MOVER_IZQUIERDA:
+			posFin = posIni-1;
+			break;
+		default:
+			return false;
+		}
+		
+		if(puedeSumar(posIni, posFin) || puedeMover(posFin))
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * Calcula si una celda se puede sumar con otra
+	 * @param posIni Posicion de la celda inicial
+	 * @param posFin Posicion de la celda final
+	 * @return
+	 */
+	private boolean puedeSumar(int posIni, int posFin){
+		Log.i(TAG, getCasilla(posIni).getValor() + " " + getCasilla(posFin).getValor() + " " +
+				posIni + " " + posFin);
+		if(!positionIsEmpty(posFin)){
+			if (getCasilla(posIni).getValor() == getCasilla(posFin).getValor()
+					&& (getCasilla(posFin).getTurnoSuma() < Game.getTurno())
+					&& (getCasilla(posIni).getTurnoSuma() < Game.getTurno()))
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Calcula si una celda puede moverse a una posicion indicada
+	 * @param posFin Posicion a la que se quiere mover
+	 * @return
+	 */
+	private boolean puedeMover(int posFin){
+		if(positionIsEmpty(posFin))
+			return true;
+		else
+			return false;
+	}
 }

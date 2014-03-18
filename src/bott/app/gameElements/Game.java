@@ -1,6 +1,9 @@
 package bott.app.gameElements;
 
+import java.util.ArrayList;
+
 import android.util.Log;
+import android.util.Pair;
 
 /**
  * Clase que agrupa las funciones y reglas del juego
@@ -144,10 +147,10 @@ public class Game {
 	 * @return
 	 */
 	public boolean juegoPerdido(){
-		if(tablero.casillasLibres() > 0)
-			return false;
-		else
+		if(tablero.casillasLibres() <= 0 && !tablero.conMovimientos())
 			return true;
+		else
+			return false;
 	}
 	
 }

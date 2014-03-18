@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnGestureListener {
 
@@ -24,8 +25,6 @@ public class MainActivity extends Activity implements OnGestureListener {
 	private Game game;
 	private Tablero tablero;
 	private static GridLayout tableroLayout;
-
-	private static boolean captandoMovimiento = true;
 
 	float[] history = new float[2];
 	String[] direction = { "NONE", "NONE" };
@@ -127,16 +126,17 @@ public class MainActivity extends Activity implements OnGestureListener {
 			pintarTablero();
 		}
 
-		// game.getTablero().mostrarTablero();
-		// Log.i(TAG, movRealizado+"");
-		// game.getTablero().mostrarCasillasLibres();
+		comprobarJuego();
 
-		// FIXME Controlar esto. De esta forma no es optimo, debo controlarlo
-		// antes de dejar mover de nuevo
-		if (game.juegoPerdido() || game.juegoGanado())
-			Log.i(TAG, "Juego ganado: " + game.juegoGanado()
-					+ " Juego perdido: " + game.juegoPerdido());
-
+	}
+	
+	private void comprobarJuego(){
+		
+		if(game.juegoGanado())
+			Toast.makeText(getApplicationContext(), "WIN :D", Toast.LENGTH_SHORT).show();
+		else if(game.juegoPerdido())
+			Toast.makeText(getApplicationContext(), "LOOOOOSER :S", Toast.LENGTH_SHORT).show();
+		
 	}
 
 	@Override
@@ -167,32 +167,27 @@ public class MainActivity extends Activity implements OnGestureListener {
 
 	@Override
 	public boolean onDown(MotionEvent e) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void onShowPress(MotionEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
 			float distanceY) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void onLongPress(MotionEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -200,27 +195,33 @@ public class MainActivity extends Activity implements OnGestureListener {
 	public boolean onFling(MotionEvent start, MotionEvent finish, float velocityX,
 			float velocityY) {
 		
-		//FIXME No detecta bien el movimiento ABAJO
-		Log.i(TAG, Math.abs(start.getX() - finish.getX()) +" " + Math.abs(start.getY() - finish.getY()));
-		if (start.getRawY() < finish.getRawY() && Math.abs(start.getX() - finish.getX()) < 200
-				&& Math.abs(start.getY() - finish.getY()) > 150) {
-			Log.i(TAG, "abajo");
-			moverCeldas(Game.MOVER_ABAJO);
-		} 
-		else if(start.getRawY() > finish.getRawY() && Math.abs(start.getX() - finish.getX()) < 200
-				&& Math.abs(start.getY() - finish.getY()) > 150) {
-			Log.i(TAG, "arriba");
-			moverCeldas(Game.MOVER_ARRIBA);
-		}
-		else if(start.getRawX() < finish.getRawX() && Math.abs(start.getY() - finish.getY()) < 200){
-			Log.i(TAG, "derecha");
-			moverCeldas(Game.MOVER_DERECHA);
-		}
-		else if(start.getRawX() > finish.getRawX() && Math.abs(start.getY() - finish.getY()) < 200){
-			Log.i(TAG, "izquierda");
-			moverCeldas(Game.MOVER_IZQUIERDA);
-		}
+//		Log.i(TAG, "X inicial: " + start.getRawX() + " X inicial: " + finish.getRawX() + " Y inicial: " +
+//				start.getRawY() + " Y final: " + finish.getRawY());
 		
+		//Diferencia el movimiento del eje X
+		if(Math.abs(start.getRawX()- finish.getRawX()) > Math.abs(start.getRawY()- finish.getRawY())){
+//			Log.i(TAG, "eje x");
+			if(start.getRawX() > finish.getRawX()){
+//				Log.i(TAG, "izquierda");
+				moverCeldas(Game.MOVER_IZQUIERDA);
+			}
+			else{
+//				Log.i(TAG, "derecha");
+				moverCeldas(Game.MOVER_DERECHA);
+			}
+		}
+		//Diferencia el movimiento del ejeY
+		if(Math.abs(start.getRawX()- finish.getRawX()) < Math.abs(start.getRawY()- finish.getRawY())){
+//			Log.i(TAG, "eje y");
+			if(start.getRawY() > finish.getRawY()){
+//				Log.i(TAG, "arriba");
+				moverCeldas(Game.MOVER_ARRIBA);
+			}
+			else{
+//				Log.i(TAG, "abajo");
+				moverCeldas(Game.MOVER_ABAJO);
+			}
+		}
 		return true;
 	}
 }
