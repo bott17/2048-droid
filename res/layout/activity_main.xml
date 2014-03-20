@@ -130,5 +130,23 @@
         android:layout_marginBottom="57dp"
         android:text="Button" />
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="53dp"
+        android:layout_toRightOf="@+id/button1"
+        android:text="SCORE" />
+
+    <TextView
+        android:id="@+id/tvScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView1"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_toRightOf="@+id/tableroLayout"
+        android:text="0" />
+
 </RelativeLayout>
     

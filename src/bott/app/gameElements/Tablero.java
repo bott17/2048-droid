@@ -30,7 +30,7 @@ public class Tablero {
 		initComponents();
 		// for(int i=0; i<14; i++)
 		// generarCasilla(true);
-		mostrarTablero();
+		//mostrarTablero();
 
 	}
 
@@ -50,6 +50,15 @@ public class Tablero {
 	 */
 	public static Tablero getInstance() {
 		createInstance();
+		return instance;
+	}
+	
+	/**
+	 * Reset te Tablero of game
+	 */
+	public static Tablero resetTablero(){
+		instance = new Tablero();
+		
 		return instance;
 	}
 
@@ -352,6 +361,12 @@ public class Tablero {
 		deleteCelda(posInicial);
 	}
 
+	/**
+	 * Add the Celda at posInicial in the Celda at posFinal, adding the value of the first to the second
+	 * @param posinicial
+	 * @param posFinal
+	 * @return True if function was success, false in other case
+	 */
 	private boolean sumaCelda(int posinicial, int posFinal) {
 
 		if (getCasilla(posinicial).getValor() == getCasilla(posFinal)
@@ -364,7 +379,7 @@ public class Tablero {
 //							+ " en: " + posFinal + "tiene turno: "
 //							+ getCasilla(posFinal).getTurnoSuma()
 //							+ "Turno actual" + Game.getTurno() + "");
-
+			
 			Celda cel = new Celda(getCasilla(posinicial).getValor() * 2);
 			cel.setTurnoSuma(Game.getTurno());
 			mapaCasillas.put(posFinal, cel);
@@ -373,6 +388,9 @@ public class Tablero {
 
 			if (cel.getValor() == Game.valorParaGanar)
 				casillaGanadora = true;
+			
+			//Update score
+			Game.updateSuma(Game.getTurno(), cel.getValor());
 
 			return true;
 		} else

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnGestureListener {
@@ -28,6 +29,7 @@ public class MainActivity extends Activity implements OnGestureListener {
 
 	float[] history = new float[2];
 	String[] direction = { "NONE", "NONE" };
+	TextView finalScore;
 
 	private GestureDetector gDetector;
 
@@ -45,12 +47,7 @@ public class MainActivity extends Activity implements OnGestureListener {
 			@Override
 			public void onClick(View v) {
 
-				boolean movRealizado = false;
-				// do{
-				movRealizado = game.moverCeldas(Game.MOVER_ABAJO);
-				game.generaNuevaCasilla();
-				pintarTablero();
-				// }while(movRealizado);
+				resetGame();
 
 			}
 		});
@@ -61,7 +58,9 @@ public class MainActivity extends Activity implements OnGestureListener {
 	 * Inicializa todos los aspectos de la activity
 	 */
 	private void initApp() {
-
+		
+		finalScore = (TextView)findViewById(R.id.tvScore);
+		
 		initGame();
 		initTablero();
 		gDetector = new GestureDetector(getApplicationContext(),this);
@@ -86,6 +85,16 @@ public class MainActivity extends Activity implements OnGestureListener {
 
 		tablero = game.getTablero();
 
+		pintarTablero();
+	}
+	
+	/**
+	 * Reset the game, set score and re-paint
+	 */
+	private void resetGame(){
+		game = Game.resetGame();
+		tablero = game.getTablero();
+		finalScore.setText("0");
 		pintarTablero();
 	}
 
@@ -118,8 +127,12 @@ public class MainActivity extends Activity implements OnGestureListener {
 			if (movRealizado)
 				newCasilla = true;
 		} while (movRealizado);
-
-		game.incrementarTurno();
+		
+		//TODO Update the score		
+		int score = game.changeTurn();
+		if(score != -1){
+			updateScore(score);
+		}
 
 		if (newCasilla) {
 			game.generaNuevaCasilla();
@@ -137,6 +150,17 @@ public class MainActivity extends Activity implements OnGestureListener {
 		else if(game.juegoPerdido())
 			Toast.makeText(getApplicationContext(), "LOOOOOSER :S", Toast.LENGTH_SHORT).show();
 		
+	}
+	
+	/**
+	 * Update the actual score adding a new score
+	 * @param score Value who update the actual score
+	 */
+	private void updateScore(int score){
+		int actualScore = Integer.parseInt(finalScore.getText().toString());
+		actualScore += score;
+		
+		finalScore.setText(actualScore+"");
 	}
 
 	@Override

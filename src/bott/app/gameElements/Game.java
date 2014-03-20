@@ -1,9 +1,6 @@
 package bott.app.gameElements;
 
-import java.util.ArrayList;
-
 import android.util.Log;
-import android.util.Pair;
 
 /**
  * Clase que agrupa las funciones y reglas del juego
@@ -25,7 +22,9 @@ public class Game {
 	private static Tablero tablero;
 
 	private static int turnoDeJuego = 1;
+	private static int ultimaSuma = 0;
 
+	
 	private static void createInstance() {
 		if (instance == null)
 			instance = new Game();
@@ -52,8 +51,31 @@ public class Game {
 
 	}
 	
-	public void incrementarTurno(){
+	/**
+	 * Reset the game
+	 */
+	public static Game resetGame(){
+		instance = new Game();
+		tablero = Tablero.resetTablero();
+		
+		return instance;
+	}
+	
+	/**
+	 * Change the turn of game, and getting the score of the last turn
+	 * @return Score obtain in the last turn. -1 if no new score
+	 */
+	public int changeTurn(){
+		
 		turnoDeJuego++;
+		
+		if(ultimaSuma != 0){
+			int temp = ultimaSuma;
+			ultimaSuma = 0;
+			return temp;
+		}
+		else
+			return -1;
 	}
 
 	/**
@@ -151,6 +173,15 @@ public class Game {
 			return true;
 		else
 			return false;
+	}
+	
+	public static void updateSuma(int turno, int suma){
+		
+		if(turno == turnoDeJuego){
+			ultimaSuma += suma;
+		}
+		else
+			ultimaSuma = suma;
 	}
 	
 }
